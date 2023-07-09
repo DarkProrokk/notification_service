@@ -1,0 +1,63 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./notification_services:/notification_services
+    environment:
+      - DB_HOST=database
+      - DB_NAME=notification_services_database
+      - DB_USER=root
+      - DB_PASS=pass
+
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15.3-alpine3.18
+    environment:
+      - POSTGRES_DB=notification_services_database
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=pass
+  redis:
+    image: redis:7.0.11-alpine
+    hostname: redis
+
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./notification_services:/notification_services
+    links:
+      - redis
+    depends_on:
+      - redis
+      - database
+    environment:
+      - DB_HOST=database
+      - DB_NAME=notification_services_database
+      - DB_USER=root
+      - DB_PASS=pass
+
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A celery_app.app flower
+    volumes:
+      - ./notification_services:/notification_services
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - '5555:5555'
