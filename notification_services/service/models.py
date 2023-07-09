@@ -46,7 +46,7 @@ class Mailing(models.Model):
 
 class Message(models.Model):
     STATUS = [
-        ('sent','Sent'),
+        ('Sent','Sent'),
         ('Not sent', 'Not sent'),
         ('Failed', 'Failed')
     ]
