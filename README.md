@@ -17,37 +17,31 @@ git clone https://github.com/DarkProrokk/notification_service.git
 ````
 python -m venv venv
 ````
-
-4. Активировать окружение: 
-
-````
-source venv/bin/activate
-````
-5. В файле .evn заполнить необходимые данные: ```TOKEN = 'token'```
+4. В файле .evn заполнить необходимые данные: ```TOKEN = 'token'```
  
-6. Установка зависимостей:
+5. Установка зависимостей:
 
 ```
 pip install -r requirements.txt
 ```
-7.
+6.
 ```
 Изменить данные для подлючения к базе данных в файле settings.py
 ```
-8. Создать и применить миграции в базу данных:
+7. Создать и применить миграции в базу данных:
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
-9. Запустить сервер
+8. Запустить сервер
 ```
 python manage.py runserver
 ```
-10. Запустить celery
+9. Запустить celery
 ```
 celery_app -A notification_service worker -l info
 ```
-11. Запустить flower
+10. Запустить flower
 
 ```
 celery_app -A notification_service flower --port=5555
